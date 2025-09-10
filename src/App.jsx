@@ -1,8 +1,17 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+import DashboardPage from "./pages/DashboardPage";
+import Background from "./components/Background";
+
 function App() {
   return (
-    <div>
-      <h1>moneyte</h1>
-    </div>
+    <BrowserRouter>
+      <Background />
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<DashboardPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 export default App;
