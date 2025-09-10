@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply bg-gray-900 text-gray-100;
+}
+
 @keyframes float1 {
   0%,
   100% {
