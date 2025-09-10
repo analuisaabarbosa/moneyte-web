@@ -5,7 +5,29 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        float1: 'float1 20s ease-in-out infinite',
+        float2: 'float2 25s ease-in-out infinite reverse',
+        float3: 'float3 30s ease-in-out infinite',
+      },
+      keyframes: {
+        float1: {
+          '0%, 100%': { transform: 'translate(0px, 0px) rotate(0deg)' },
+          '33%': { transform: 'translate(30px, -30px) rotate(120deg)' },
+          '66%': { transform: 'translate(-20px, 20px) rotate(240deg)' },
+        },
+        float2: {
+          '0%, 100%': { transform: 'translate(0px, 0px) rotate(0deg)' },
+          '50%': { transform: 'translate(-25px, -40px) rotate(180deg)' },
+        },
+        float3: {
+          '0%, 100%': { transform: 'translate(0px, 0px) scale(1)' },
+          '33%': { transform: 'translate(25px, -15px) scale(1.1)' },
+          '66%': { transform: 'translate(-15px, 25px) scale(0.9)' },
+        },
+      },
+    },
   },
   plugins: [],
 }
