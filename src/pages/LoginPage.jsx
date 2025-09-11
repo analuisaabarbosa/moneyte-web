@@ -1,20 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../services/authService";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+  const { login, loading } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
-    setLoading(true);
 
     try {
       await login(email, password);
@@ -31,8 +30,6 @@ const LoginPage = () => {
           error.response?.data?.message || "Erro no login. Tente novamente.";
         setError(errorMessage);
       }
-    } finally {
-      setLoading(false);
     }
   };
 
