@@ -43,6 +43,15 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+  const register = async (email, password) => {
+    const response = await api.post("/users/register", { email, password });
+    const { token: newToken, ...userData } = response.data;
+
+    localStorage.setItem("userToken", newToken);
+    api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+    setToken(newToken);
+    setUser(userData);
+  };
   const logout = () => {
     localStorage.removeItem("userToken");
     delete api.defaults.headers.common["Authorization"];
@@ -54,6 +63,7 @@ export const AuthProvider = ({ children }) => {
     user,
     token,
     loading,
+    register,
     login,
     logout,
   };
