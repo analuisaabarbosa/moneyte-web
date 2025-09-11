@@ -88,7 +88,7 @@ const AuthForm = ({ formType, handleSubmit, loading, error }) => {
             <button
               type="button"
               onClick={togglePasswordVisibility}
-              className="absolute inset-y-0 right-0 z-10 flex items-center pr-3 text-gray-400 hover:text-white"
+              className="absolute inset-y-0 right-0 z-10 flex items-center p-3 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded-lg"
             >
               {showPassword ? (
                 <svg
@@ -145,7 +145,7 @@ const AuthForm = ({ formType, handleSubmit, loading, error }) => {
             <button
               type="button"
               onClick={toggleConfirmPasswordVisibility}
-              className="absolute inset-y-0 right-0 top-7 flex items-center pr-3 text-gray-400 hover:text-white focus:outline-none"
+              className="absolute inset-y-0 right-0 top-7 flex items-center p-3 text-gray-400 hover:text-white focus:ring-2 focus:outline-none focus:ring-blue-500 focus:ring-offset-1 rounded-lg"
             >
               {showConfirmPassword ? (
                 // close eye icon
@@ -187,7 +187,7 @@ const AuthForm = ({ formType, handleSubmit, loading, error }) => {
 
         <button
           type="submit"
-          className="w-full rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 py-3 font-bold text-white transition-transform hover:scale-105"
+          className="w-full rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 py-3 font-bold text-white transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
           disabled={loading}
         >
           {loading ? "Carregando..." : buttonText}
@@ -208,7 +208,10 @@ const AuthForm = ({ formType, handleSubmit, loading, error }) => {
       )}
       <p className="mt-6 text-center text-sm text-gray-400">
         {linkText}{" "}
-        <Link to={linkTo} className="font-medium text-blue-400 hover:underline">
+        <Link
+          to={linkTo}
+          className="font-medium text-blue-400 hover:underline focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded-sm focus:out"
+        >
           aqui
         </Link>
       </p>
