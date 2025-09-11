@@ -23,7 +23,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center">
+    <main className="flex min-h-screen p-4 items-center justify-center">
       <AuthForm
         formType="register"
         handleSubmit={handleRegister}
