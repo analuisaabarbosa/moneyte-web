@@ -16,9 +16,19 @@ const RegisterPage = () => {
     try {
       await register(email, password);
       navigate("/");
+      alert("Login feito com sucesso");
     } catch (error) {
       console.error(error);
-      setError("Falha no cadastro. Verifique os dados.");
+      if (
+        error.response?.data?.errors &&
+        Array.isArray(error.response.data.errors)
+      ) {
+        setError(error.response.data.errors);
+      } else {
+        const errorMessage =
+          error.response?.data?.message || "Erro no cadastro. Tente novamente.";
+        setError(errorMessage);
+      }
     }
   };
 
