@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 import AuthForm from "../components/AuthForm";
 
 const LoginPage = () => {
@@ -13,6 +14,7 @@ const LoginPage = () => {
 
     try {
       await login(email, password);
+      toast.success("Login realizado com sucesso!");
       navigate("/");
     } catch (error) {
       console.error("Erro no login:", error);
