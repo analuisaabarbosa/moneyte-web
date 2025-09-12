@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 import AuthForm from "../components/AuthForm";
 
 const RegisterPage = () => {
@@ -15,8 +16,8 @@ const RegisterPage = () => {
     }
     try {
       await register(name, email, password);
+      toast.success("Cadastro realizado com sucesso!");
       navigate("/");
-      alert("Login feito com sucesso");
     } catch (error) {
       console.error(error);
       if (
