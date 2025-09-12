@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify"; // 1. IMPORTE O CONTAINER
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import Background from "./components/Background";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RegisterPage from "./pages/RegisterPage";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -21,6 +23,18 @@ function App() {
           }
         />
       </Routes>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </BrowserRouter>
   );
 }
