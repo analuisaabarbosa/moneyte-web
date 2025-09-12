@@ -8,13 +8,13 @@ const RegisterPage = () => {
   const { register, loading } = useAuth();
   const navigate = useNavigate();
 
-  const handleRegister = async ({ email, password, confirmPassword }) => {
+  const handleRegister = async ({ name, email, password, confirmPassword }) => {
     setError(null);
     if (password !== confirmPassword) {
       return setError("As senhas não conferem.");
     }
     try {
-      await register(email, password);
+      await register(name, email, password);
       navigate("/");
       alert("Login feito com sucesso");
     } catch (error) {
