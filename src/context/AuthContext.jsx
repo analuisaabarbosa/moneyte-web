@@ -1,5 +1,9 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import api from "../services/api";
+import {
+  login as loginService,
+  register as registerService,
+} from "../services/authService";
 
 const AuthContext = createContext();
 
@@ -28,9 +32,9 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     setLoading(true);
     try {
-      const response = await api.post("/users/login", { email, password });
-      const { token: newToken, ...userData } = response.data;
+      const data = await loginService(email, password);
 
+      const { token: newToken, ...userData } = data;
       localStorage.setItem("userToken", newToken);
       api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
       setToken(newToken);
@@ -43,14 +47,19 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
-  const register = async (email, password) => {
-    const response = await api.post("/users/register", { email, password });
-    const { token: newToken, ...userData } = response.data;
-
-    localStorage.setItem("userToken", newToken);
-    api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
-    setToken(newToken);
-    setUser(userData);
+  const register = async (name, email, password) => {
+    try {
+      const data = await registerService(name, email, password);
+      const { token: newToken, ...userData } = data;
+      localStorage.setItem("userToken", newToken);
+      api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+      setToken(newToken);
+      setUser(userData);
+    } catch (error) {
+      localStorage.removeItem("userToken");
+      delete api.defaults.headers.common["Authorization"];
+      throw error;
+    }
   };
   const logout = () => {
     localStorage.removeItem("userToken");
