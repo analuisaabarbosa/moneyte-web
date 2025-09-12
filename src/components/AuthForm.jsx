@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const AuthForm = ({ formType, handleSubmit, loading, error }) => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -21,7 +22,7 @@ const AuthForm = ({ formType, handleSubmit, loading, error }) => {
 
   const onFormSubmit = (event) => {
     event.preventDefault();
-    handleSubmit({ email, password, confirmPassword });
+    handleSubmit({ name, email, password, confirmPassword });
   };
 
   const togglePasswordVisibility = () => {
@@ -53,6 +54,24 @@ const AuthForm = ({ formType, handleSubmit, loading, error }) => {
       </div>
 
       <form onSubmit={onFormSubmit}>
+        {isRegister && (
+          <div className="mb-4">
+            <label
+              className="mb-2 block text-sm font-medium text-gray-300"
+              htmlFor="name"
+            >
+              Nome
+            </label>
+            <input
+              type="text"
+              id="name"
+              className="w-full rounded-xl border border-white/20 bg-white/20 px-4 py-3 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+              placeholder="Digite seu nome"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+        )}
         <div className="mb-4">
           <label
             className="mb-2 block text-sm font-medium text-gray-300"
