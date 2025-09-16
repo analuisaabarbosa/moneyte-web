@@ -74,7 +74,7 @@ const DashboardPage = () => {
 
       const summaryData = await getSummary();
       setSummary(summaryData);
-      toast.success("Transação removida com sucesso!");
+      toast.success("Transação excluida com sucesso!");
     } catch (error) {
       console.error("Erro ao deletar transação:", error);
       toast.error("Não foi possível excluir a transação.");
