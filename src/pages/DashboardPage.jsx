@@ -1,8 +1,14 @@
-import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import TransactionList from "../components/TransactionList";
-import { getSummary, getTransactions } from "../services/transactionService";
+import ConfirmationDeleteModal from "../components/ConfirmationDeleteModal";
+import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
+import {
+  getSummary,
+  getTransactions,
+  deleteTransaction,
+} from "../services/transactionService";
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat("pt-BR", {
@@ -18,6 +24,8 @@ const DashboardPage = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [transactionToDelete, setTransactionToDelete] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +52,36 @@ const DashboardPage = () => {
 
     fetchData();
   }, []);
+
+  const handleOpenDeleteModal = (id) => {
+    setTransactionToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setTransactionToDelete(null);
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!transactionToDelete) return;
+    try {
+      await deleteTransaction(transactionToDelete);
+
+      setTransactions((prevTransactions) =>
+        prevTransactions.filter((t) => t._id !== transactionToDelete)
+      );
+
+      const summaryData = await getSummary();
+      setSummary(summaryData);
+      toast.success("Transação removida com sucesso!");
+    } catch (error) {
+      console.error("Erro ao deletar transação:", error);
+      toast.error("Não foi possível excluir a transação.");
+    } finally {
+      handleCloseDeleteModal();
+    }
+  };
 
   // -- svg icons --
   const DollarIcon = () => (
@@ -271,7 +309,17 @@ const DashboardPage = () => {
             </li>
           </ul>
         </section>
-        <TransactionList transactions={transactions} />
+        <TransactionList
+          transactions={transactions}
+          onDeleteClick={handleOpenDeleteModal}
+        />
+        <ConfirmationDeleteModal
+          isOpen={isDeleteModalOpen}
+          onClose={handleCloseDeleteModal}
+          onConfirm={handleConfirmDelete}
+          title="Confirmar Exclusão"
+          message="Tem certeza de que deseja excluir esta transação? Esta ação é permanente e não poderá ser desfeita."
+        />
       </main>
     </>
   );
