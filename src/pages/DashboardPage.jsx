@@ -1,6 +1,8 @@
 import Navbar from "../components/Navbar";
 import TransactionList from "../components/TransactionList";
 import ConfirmationDeleteModal from "../components/ConfirmationDeleteModal";
+import Modal from "../components/Modal";
+import TransactionForm from "../components/TransactionForm";
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
@@ -8,6 +10,7 @@ import {
   getSummary,
   getTransactions,
   deleteTransaction,
+  createTransaction,
 } from "../services/transactionService";
 
 const formatCurrency = (value) => {
@@ -26,6 +29,8 @@ const DashboardPage = () => {
   const [error, setError] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [transactionToDelete, setTransactionToDelete] = useState(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [newTransactionType, setNewTransactionType] = useState("despesa");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,6 +68,15 @@ const DashboardPage = () => {
     setIsDeleteModalOpen(false);
   };
 
+  const handleOpenCreateModal = (type) => {
+    setNewTransactionType(type);
+    setIsCreateModalOpen(true);
+  };
+
+  const handleCloseCreateModal = () => {
+    setIsCreateModalOpen(false);
+  };
+
   const handleConfirmDelete = async () => {
     if (!transactionToDelete) return;
     try {
@@ -75,11 +89,34 @@ const DashboardPage = () => {
       const summaryData = await getSummary();
       setSummary(summaryData);
       toast.success("Transação excluida com sucesso!");
-    } catch (error) {
-      console.error("Erro ao deletar transação:", error);
+    } catch (err) {
+      console.error("Erro ao deletar transação:", err);
       toast.error("Não foi possível excluir a transação.");
     } finally {
       handleCloseDeleteModal();
+    }
+  };
+
+  const handleCreateTransaction = async (transactionData) => {
+    console.log("Dados recebidos do formulário:", transactionData);
+    try {
+      const dataToSubmit = { ...transactionData, type: newTransactionType };
+      const newTransaction = await createTransaction(dataToSubmit);
+
+      setTransactions((prev) =>
+        [newTransaction, ...prev].sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        )
+      );
+
+      const summaryData = await getSummary();
+      setSummary(summaryData);
+
+      toast.success("Transação adicionada com sucesso!");
+      handleCloseCreateModal();
+    } catch (err) {
+      console.error("Erro ao criar transação:", err);
+      toast.error("Não foi possível adicionar a transação.");
     }
   };
 
@@ -251,7 +288,10 @@ const DashboardPage = () => {
 
           <ul className="contents">
             <li>
-              <button className="border border-white/20 h-full w-full bg-white/5 hover:bg-white/10 text-white p-6 rounded-2xl flex items-center gap-4 text-left transition-colors duration-200">
+              <button
+                onClick={() => handleOpenCreateModal("receita")}
+                className="border border-white/20 h-full w-full bg-white/5 hover:bg-white/10 text-white p-6 rounded-2xl flex items-center gap-4 text-left transition-colors duration-200"
+              >
                 <span className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 rounded-full flex items-center justify-center">
                   {/* + icon */}
                   <svg
@@ -280,7 +320,10 @@ const DashboardPage = () => {
               </button>
             </li>
             <li>
-              <button className="border border-white/20 h-full w-full bg-white/5 hover:bg-white/10 text-white p-6 rounded-2xl flex items-center gap-4 text-left transition-colors duration-200">
+              <button
+                onClick={() => handleOpenCreateModal("despesa")}
+                className="border border-white/20 h-full w-full bg-white/5 hover:bg-white/10 text-white p-6 rounded-2xl flex items-center gap-4 text-left transition-colors duration-200"
+              >
                 <span className="bg-gradient-to-r from-red-600 to-orange-500 p-3 rounded-full flex items-center justify-center">
                   {/* - icon */}
                   <svg
@@ -320,6 +363,22 @@ const DashboardPage = () => {
           title="Confirmar Exclusão"
           message="Tem certeza de que deseja excluir esta transação? Esta ação é permanente e não poderá ser desfeita."
         />
+        <Modal
+          isOpen={isCreateModalOpen}
+          onClose={handleCloseCreateModal}
+          title={
+            newTransactionType === "receita"
+              ? "Adicionar Receita"
+              : "Adicionar Despesa"
+          }
+        >
+          <TransactionForm
+            onSubmit={handleCreateTransaction}
+            onClose={handleCloseCreateModal}
+            type={newTransactionType}
+            setType={setNewTransactionType}
+          />
+        </Modal>
       </main>
     </>
   );

@@ -10,8 +10,13 @@ export default {
         float1: 'float1 20s ease-in-out infinite',
         float2: 'float2 25s ease-in-out infinite reverse',
         float3: 'float3 30s ease-in-out infinite',
+        fadeInScale: 'fadeInScale 0.3s ease-out forwards'
       },
       keyframes: {
+        fadeInScale: {
+          '0%': { transform: 'scale(0.95)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
         float1: {
           '0%, 100%': { transform: 'translate(0px, 0px) rotate(0deg)' },
           '33%': { transform: 'translate(30px, -30px) rotate(120deg)' },
