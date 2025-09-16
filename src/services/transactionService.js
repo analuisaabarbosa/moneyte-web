@@ -14,3 +14,8 @@ export const deleteTransaction = async (id) => {
     const response = await api.delete(`/transactions/${id}`);
     return response.data;
 };
+
+export const createTransaction = async (transactionData) => {
+    const response = await api.post('/transactions', transactionData);
+    return response.data;
+};
