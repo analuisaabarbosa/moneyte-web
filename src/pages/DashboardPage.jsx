@@ -219,14 +219,14 @@ const DashboardPage = () => {
     <>
       <Navbar />
       <main className="container mx-auto py-8 px-10 text-white">
-        <header className="flex justify-between items-center mb-6">
+        <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
           <div>
             <h1 className="text-3xl font-bold">Olá, {user.name}</h1>
             <p className="text-gray-400">
               Gerencie suas finanças com facilidade.
             </p>
           </div>
-          <button className="border border-white/20 bg-white/10 text-gray-300 hover:bg-white/20 rounded-2xl flex items-center gap-2 px-3 py-1 text-sm sm:px-4 sm:py-2 sm:text-base">
+          <button className="border border-white/20 bg-white/10 text-gray-300 hover:bg-white/20 rounded-2xl flex items-center gap-2 px-3 py-1">
             <ListIcon />
             Todas as Transações
           </button>
