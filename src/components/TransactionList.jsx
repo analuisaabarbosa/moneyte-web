@@ -71,7 +71,7 @@ const formatCurrency = (value) => {
   }).format(value);
 };
 
-const TransactionList = ({ transactions }) => {
+const TransactionList = ({ transactions, onDeleteClick }) => {
   return (
     <section
       className="border border-white/20 bg-white/10 rounded-2xl p-6"
@@ -134,7 +134,10 @@ const TransactionList = ({ transactions }) => {
                     <button className="hover:text-blue-400 transition-colors">
                       <EditIcon />
                     </button>
-                    <button className="hover:text-red-500 transition-colors">
+                    <button
+                      onClick={() => onDeleteClick(transaction._id)}
+                      className="hover:text-red-500 transition-colors"
+                    >
                       <DeleteIcon />
                     </button>
                   </div>
