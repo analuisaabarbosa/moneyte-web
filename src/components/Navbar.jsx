@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-const Navbar = () => {
+const Navbar = ({ showBackButton = false }) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -28,15 +28,41 @@ const Navbar = () => {
     </svg>
   );
 
+  const ArrowLeftIcon = () => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m12 19-7-7 7-7" />
+      <path d="M19 12H5" />
+    </svg>
+  );
+
   return (
     <header className="bg-gray-800/50 py-4 text-white shadow-md backdrop-blur-md">
       <nav
         className="container mx-auto px-11 flex items-center justify-between"
         aria-label="Menu principal"
       >
-        <Link to="/" className="text-lg font-semibold">
-          moneyte
-        </Link>
+        {showBackButton ? (
+          <button
+            onClick={() => navigate(-1)}
+            className="text-xl font-bold flex items-center gap-2 hover:text-gray-300"
+          >
+            <ArrowLeftIcon />
+          </button>
+        ) : (
+          <Link to="/" className="text-xl font-bold">
+            moneyte
+          </Link>
+        )}
         <div className="flex">
           <ul>
             <li>
