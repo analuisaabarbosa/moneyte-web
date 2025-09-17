@@ -71,7 +71,12 @@ const formatCurrency = (value) => {
   }).format(value);
 };
 
-const TransactionList = ({ transactions, onDeleteClick, onEditClick }) => {
+const TransactionList = ({
+  title,
+  transactions,
+  onDeleteClick,
+  onEditClick,
+}) => {
   return (
     <section
       className="border border-white/20 bg-white/10 rounded-2xl p-6"
@@ -81,12 +86,12 @@ const TransactionList = ({ transactions, onDeleteClick, onEditClick }) => {
         id="transacoes-heading"
         className="text-2xl font-bold mb-4 text-white"
       >
-        Transações Recentes
+        {title}
       </h2>
       <div className="p-4">
         {transactions.length > 0 ? (
           <ul>
-            {transactions.slice(0, 5).map((transaction) => (
+            {transactions.map((transaction) => (
               <li
                 key={transaction._id}
                 className="flex flex-col sm:flex-row justify-between sm:items-center p-3 bg-white/5 border border-white/20 rounded-xl mb-4"
