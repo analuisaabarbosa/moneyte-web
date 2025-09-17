@@ -71,7 +71,7 @@ const formatCurrency = (value) => {
   }).format(value);
 };
 
-const TransactionList = ({ transactions, onDeleteClick }) => {
+const TransactionList = ({ transactions, onDeleteClick, onEditClick }) => {
   return (
     <section
       className="border border-white/20 bg-white/10 rounded-2xl p-6"
@@ -110,12 +110,13 @@ const TransactionList = ({ transactions, onDeleteClick }) => {
                       {transaction.title}
                     </p>
                     <p className="text-sm text-gray-400">
-                      {new Date(transaction.date).toLocaleDateString("pt-BR", {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                        timeZone: "UTC",
-                      })}
+                      {transaction.date &&
+                        new Date(transaction.date).toLocaleDateString("pt-BR", {
+                          day: "2-digit",
+                          month: "long",
+                          year: "numeric",
+                          timeZone: "UTC",
+                        })}
                     </p>
                   </div>
                 </div>
@@ -131,7 +132,10 @@ const TransactionList = ({ transactions, onDeleteClick }) => {
                     {formatCurrency(Math.abs(transaction.amount))}
                   </p>
                   <div className="flex items-center gap-2 text-gray-400">
-                    <button className="hover:text-blue-400 transition-colors">
+                    <button
+                      onClick={() => onEditClick(transaction)}
+                      className="hover:text-blue-400 transition-colors"
+                    >
                       <EditIcon />
                     </button>
                     <button
