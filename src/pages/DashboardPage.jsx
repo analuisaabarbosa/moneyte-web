@@ -13,6 +13,7 @@ import {
   createTransaction,
   updateTransaction,
 } from "../services/transactionService";
+import { Link } from "react-router-dom";
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat("pt-BR", {
@@ -43,7 +44,7 @@ const DashboardPage = () => {
         setLoading(true);
         const [summaryData, transactionsData] = await Promise.all([
           getSummary(),
-          getTransactions(),
+          getTransactions(5),
         ]);
 
         setSummary(summaryData);
@@ -87,12 +88,13 @@ const DashboardPage = () => {
     try {
       await deleteTransaction(transactionToDelete);
 
-      setTransactions((prevTransactions) =>
-        prevTransactions.filter((t) => t._id !== transactionToDelete)
-      );
-
-      const summaryData = await getSummary();
+      const [summaryData, transactionsData] = await Promise.all([
+        getSummary(),
+        getTransactions(5),
+      ]);
       setSummary(summaryData);
+      setTransactions(transactionsData);
+
       toast.success("Transação excluida com sucesso!");
     } catch (err) {
       console.error("Erro ao deletar transação:", err);
@@ -105,16 +107,14 @@ const DashboardPage = () => {
   const handleCreateTransaction = async (transactionData) => {
     try {
       const dataToSubmit = { ...transactionData, type: newTransactionType };
-      const newTransaction = await createTransaction(dataToSubmit);
+      await createTransaction(dataToSubmit);
 
-      setTransactions((prev) =>
-        [newTransaction, ...prev].sort(
-          (a, b) => new Date(b.date) - new Date(a.date)
-        )
-      );
-
-      const summaryData = await getSummary();
+      const [summaryData, transactionsData] = await Promise.all([
+        getSummary(),
+        getTransactions(5),
+      ]);
       setSummary(summaryData);
+      setTransactions(transactionsData);
 
       toast.success("Transação adicionada com sucesso!");
       handleCloseCreateModal();
@@ -139,20 +139,16 @@ const DashboardPage = () => {
     if (!editingTransaction) return;
 
     try {
-      const updated = await updateTransaction(
-        editingTransaction._id,
-        transactionData
-      );
+      await updateTransaction(editingTransaction._id, transactionData);
 
-      setTransactions((prev) =>
-        prev.map((t) => (t._id === editingTransaction._id ? updated : t))
-      );
-
-      const summaryData = await getSummary();
+      const [summaryData, transactionsData] = await Promise.all([
+        getSummary(),
+        getTransactions(5),
+      ]);
       setSummary(summaryData);
+      setTransactions(transactionsData);
 
       toast.success("Transação atualizada com sucesso!");
-
       handleCloseUpdateModal();
     } catch (err) {
       console.error("Erro ao atualizar transação:", err);
@@ -238,7 +234,7 @@ const DashboardPage = () => {
     return (
       <>
         <Navbar />
-        <main className="container mx-auto p-4">
+        <main className="flex items-center justify-center h-screen">
           <p className="text-white text-center">Carregando...</p>
         </main>
       </>
@@ -249,7 +245,7 @@ const DashboardPage = () => {
     return (
       <>
         <Navbar />
-        <main className="container mx-auto p-4">
+        <main className="flex items-center justify-center h-screen">
           <p className="text-red-500 text-center">{error}</p>
         </main>
       </>
@@ -267,10 +263,13 @@ const DashboardPage = () => {
               Gerencie suas finanças com facilidade.
             </p>
           </div>
-          <button className="border border-white/20 bg-white/10 text-gray-300 hover:bg-white/20 rounded-2xl flex items-center gap-2 px-3 py-1">
+          <Link
+            to="/transactions"
+            className="border border-white/20 bg-white/10 text-gray-300 hover:bg-white/20 rounded-2xl flex items-center gap-2 px-3 py-1"
+          >
             <ListIcon />
             Todas as Transações
-          </button>
+          </Link>
         </header>
         <section
           className="bg-white/10 p-6 rounded-2xl mb-8 border border-white/20"
@@ -394,6 +393,7 @@ const DashboardPage = () => {
           </ul>
         </section>
         <TransactionList
+          title={"Transações Recentes"}
           transactions={transactions}
           onDeleteClick={handleOpenDeleteModal}
           onEditClick={handleOpenUpdateModal}
