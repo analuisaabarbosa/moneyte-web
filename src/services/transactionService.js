@@ -5,8 +5,14 @@ export const getSummary = async () => {
     return response.data;
 };
 
-export const getTransactions = async () => {
-    const response = await api.get('/transactions');
+export const getTransactions = async (limit) => {
+    let url = '/transactions';
+
+    if (limit) {
+        url += `?limit=${limit}`;
+    }
+
+    const response = await api.get(url);
     return response.data;
 };
 
