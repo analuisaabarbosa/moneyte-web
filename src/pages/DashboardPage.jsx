@@ -11,6 +11,7 @@ import {
   getTransactions,
   deleteTransaction,
   createTransaction,
+  updateTransaction,
 } from "../services/transactionService";
 
 const formatCurrency = (value) => {
@@ -31,6 +32,10 @@ const DashboardPage = () => {
   const [transactionToDelete, setTransactionToDelete] = useState(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newTransactionType, setNewTransactionType] = useState("despesa");
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingTransaction, setEditingTransaction] = useState(null);
+  const [editingTransactionType, setEditingTransactionType] =
+    useState("despesa");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -98,7 +103,6 @@ const DashboardPage = () => {
   };
 
   const handleCreateTransaction = async (transactionData) => {
-    console.log("Dados recebidos do formulário:", transactionData);
     try {
       const dataToSubmit = { ...transactionData, type: newTransactionType };
       const newTransaction = await createTransaction(dataToSubmit);
@@ -117,6 +121,45 @@ const DashboardPage = () => {
     } catch (err) {
       console.error("Erro ao criar transação:", err);
       toast.error("Não foi possível adicionar a transação.");
+    }
+  };
+
+  const handleOpenUpdateModal = (transaction) => {
+    setEditingTransaction(transaction);
+    setEditingTransactionType(transaction.type);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseUpdateModal = () => {
+    setIsEditModalOpen(false);
+    setEditingTransaction(null);
+  };
+
+  const handleUpdateTransaction = async (transactionData) => {
+    if (!editingTransaction) return;
+
+    try {
+      const response = await updateTransaction(
+        editingTransaction._id,
+        transactionData
+      );
+
+      const updatedTransaction = response.updatedTransaction;
+
+      setTransactions((prev) =>
+        prev.map((t) =>
+          t._id === editingTransaction._id ? updatedTransaction : t
+        )
+      );
+
+      const summaryData = await getSummary();
+      setSummary(summaryData);
+      toast.success("Transação atualizada com sucesso!");
+    } catch (err) {
+      console.error("Erro ao atualizar transação:", err);
+      toast.error("Não foi possível atualizar a transação.");
+    } finally {
+      handleCloseUpdateModal();
     }
   };
 
@@ -355,6 +398,7 @@ const DashboardPage = () => {
         <TransactionList
           transactions={transactions}
           onDeleteClick={handleOpenDeleteModal}
+          onEditClick={handleOpenUpdateModal}
         />
         <ConfirmationDeleteModal
           isOpen={isDeleteModalOpen}
@@ -379,6 +423,21 @@ const DashboardPage = () => {
             setType={setNewTransactionType}
           />
         </Modal>
+        {editingTransaction && (
+          <Modal
+            isOpen={isEditModalOpen}
+            onClose={handleCloseUpdateModal}
+            title="Editar Transação"
+          >
+            <TransactionForm
+              onSubmit={handleUpdateTransaction}
+              onClose={handleCloseUpdateModal}
+              initialData={editingTransaction}
+              type={editingTransactionType}
+              setType={setEditingTransactionType}
+            />
+          </Modal>
+        )}
       </main>
     </>
   );
