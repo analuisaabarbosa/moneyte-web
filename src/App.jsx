@@ -5,6 +5,7 @@ import DashboardPage from "./pages/DashboardPage";
 import Background from "./components/Background";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RegisterPage from "./pages/RegisterPage";
+import AllTransactionsPage from "./pages/AllTransactionsPage";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
@@ -19,6 +20,14 @@ function App() {
           element={
             <ProtectedRoute>
               <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/transactions"
+          element={
+            <ProtectedRoute>
+              <AllTransactionsPage />
             </ProtectedRoute>
           }
         />
