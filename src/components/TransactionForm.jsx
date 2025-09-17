@@ -23,7 +23,13 @@ const TransactionForm = ({ onSubmit, initialData = null, type, setType }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const transactionData = { title, amount, date, type, description };
+    const transactionData = {
+      title,
+      amount: parseFloat(amount),
+      date,
+      type,
+      description,
+    };
     onSubmit(transactionData);
   };
 
