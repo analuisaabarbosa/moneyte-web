@@ -139,26 +139,24 @@ const DashboardPage = () => {
     if (!editingTransaction) return;
 
     try {
-      const response = await updateTransaction(
+      const updated = await updateTransaction(
         editingTransaction._id,
         transactionData
       );
 
-      const updatedTransaction = response.updatedTransaction;
-
       setTransactions((prev) =>
-        prev.map((t) =>
-          t._id === editingTransaction._id ? updatedTransaction : t
-        )
+        prev.map((t) => (t._id === editingTransaction._id ? updated : t))
       );
 
       const summaryData = await getSummary();
       setSummary(summaryData);
+
       toast.success("Transação atualizada com sucesso!");
+
+      handleCloseUpdateModal();
     } catch (err) {
       console.error("Erro ao atualizar transação:", err);
       toast.error("Não foi possível atualizar a transação.");
-    } finally {
       handleCloseUpdateModal();
     }
   };
