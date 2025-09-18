@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const apiUrl = "https://moneyte-api.onrender.com/api"
+
 const api = axios.create({
-    baseURL: 'http://localhost:3001/api',
+    baseURL: apiUrl,
 });
 
 export default api;
